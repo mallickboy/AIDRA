@@ -4,6 +4,7 @@ from pathlib import Path  # Correct module
 folder_str = [
     "src/__init__.py",
     "src/helper.py",
+    "src/prompt.py",
     "requirements.txt",       # fixed typo
     "setup.py",
     "app.py",

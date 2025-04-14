@@ -7,3 +7,5 @@ pinecone[grpc]
 langchain-pinecone
 langchain_community
 langchain_experimental
+-e .
+
