@@ -1,91 +1,72 @@
-from flask import Flask, render_template, jsonify, request
-# from src.helper import download_hugging_face_embeddings
-# from src.healper import 
-# from langchain.chains import create_retrival_chain
-from langchain.chains.combine_documents import create_stuff_documents_chain
-# from langchain_core.prompts import ChatPromptTemplate
-
-from pinecone import Pinecone, ServerlessSpec
-import os
-from dotenv import load_dotenv
-
-from langchain_pinecone import PineconeVectorStore
+from flask import Flask, render_template, request
 from langchain.chains import RetrievalQA
-from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain.prompts import PromptTemplate
-from src.custom_prompt import *
-from utility import *
+from langchain_community.embeddings import HuggingFaceEmbeddings
+from langchain_pinecone import PineconeVectorStore
+from langchain_google_genai import ChatGoogleGenerativeAI
+from dotenv import load_dotenv
 import os
+from pinecone import Pinecone
 
-
+load_dotenv()
 
 app = Flask(__name__)
 
-load_dotenv()
+
+embedding_model = HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2")
+
 PCapi = os.getenv('ragdoctor')
-gemapi= os.getenv('GemAPI')
-
 os.environ["PINECONE_API_KEY"] = PCapi
-os.environ["GOOGLE_API_KEY"] = gemapi
-
-Embedding = Hf_embedding_model()
-
-index_name = 'doctordb'
-
 pc = Pinecone(api_key=PCapi)
 index_name = "doctordb"
-if not checkVectorDB(index_name,PCapi):
-    pc.create_index(
-        name=index_name,
-        dimension=384, #  model dimensions
-        metric="cosine", #model metric
-        spec=ServerlessSpec(
-            cloud="aws",
-            region="us-east-1"
-        )
-    )
-else:
-    print("database created Previously!")
 
-searchdocs = PineconeVectorStore.from_existing_index(
-    index_name=index_name,
-    embedding=Embedding
-)
+# Loading PC
+vector_store = PineconeVectorStore.from_existing_index(index_name=index_name, embedding=embedding_model)
+retriever = vector_store.as_retriever(search_type="similarity", search_kwargs={"k": 10})
 
-retriver = searchdocs.as_retriever(search_type="similarity", search_kwargs={"k":10})
+# Gemini init
+gemapi = os.getenv('GemAPI')
+os.environ["GOOGLE_API_KEY"] = gemapi
+llm = ChatGoogleGenerativeAI(model="gemini-2.0-flash", temperature=0.7, max_tokens=1024)
 
-llm = ChatGoogleGenerativeAI(
-    model="gemini-2.0-flash",  # or "gemini-1.5-flash"
-    temperature=0.7,
-    max_tokens=1024
-)
-
+# Custom prompt
 custom_prompt = PromptTemplate(
     input_variables=["context", "question"],
-    template=custom_prompt_template
+    template="""
+You are an expert in holistic and alternative medicine, with deep knowledge sourced from trusted resources like *The Gale Encyclopedia of Alternative Medicine*.
+
+Using the following context from the encyclopedia, answer the question thoughtfully and factually. Focus on natural remedies, therapies, and traditional practices when relevant.
+
+If the answer cannot be found in the context, respond with: "The provided encyclopedia content does not contain a definitive answer."
+Use a calm, educational tone.
+
+Context:
+{context}
+
+Question:
+{question}
+
+Answer:
+"""
 )
 
+# QA Chain
 qa_chain = RetrievalQA.from_chain_type(
     llm=llm,
-    retriever=retriver,
+    retriever=retriever,
     return_source_documents=True,
     chain_type_kwargs={"prompt": custom_prompt}
 )
 
-question_answer_chain= create_stuff_documents_chain(llm, custom_prompt)
-# rag_chain = create_retrival_chain(retriver, question_answer_chain)
-
-@app.route("/")
+@app.route('/', methods=['GET', 'POST'])
 def index():
-    return render_template('index.html')
-
-@app.route("/get", methods=["GET", "POST"])
-def chat():
-    msg = request.form["msg"]
-    print("User input:", msg)
-    response = qa_chain.invoke({"question": msg})
-    print("Response:", response.get("answer", "No answer found."))
-    return str(response.get("answer", "No answer found."))
+    answer = None
+    question = ""
+    if request.method == 'POST':
+        question = request.form['question']
+        result = qa_chain.invoke(question)
+        answer = result['result']
+    return render_template('index.html', answer=answer, question=question)
 
 if __name__ == '__main__':
-    app.run(host="0.0.0.0", port = 8080, debug = True)
+    app.run(debug=True)
