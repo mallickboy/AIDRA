@@ -1,4 +1,6 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request , session
+from qa_pipeline import get_answer
+from flask_session import Session
 from langchain.chains import RetrievalQA
 from langchain.prompts import PromptTemplate
 from langchain_community.embeddings import HuggingFaceEmbeddings
@@ -11,8 +13,7 @@ from pinecone import Pinecone
 load_dotenv()
 
 app = Flask(__name__)
-
-
+app.secret_key = os.getenv('FLASK_SECRET_KEY')
 embedding_model = HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2")
 
 PCapi = os.getenv('ragdoctor')
@@ -59,14 +60,29 @@ qa_chain = RetrievalQA.from_chain_type(
 )
 
 @app.route('/', methods=['GET', 'POST'])
+
 def index():
+        
     answer = None
     question = ""
+    if "history" not in session:
+        session["history"] =[]
+
     if request.method == 'POST':
         question = request.form['question']
         result = qa_chain.invoke(question)
         answer = result['result']
-    return render_template('index.html', answer=answer, question=question)
+        # answer = get_answer(question)
+        session["history"].append({"question": question, "answer": answer})
+        session.modified = True
+    # return render_template('index.html', answer=answer, question=question)
+    return render_template("index.html", history=session["history"], answer=answer, question=question)
+
+
+@app.route('/clear')
+def clear():
+    session.pop("history", None)
+    return render_template("index.html", history=[], question="")
 
 if __name__ == '__main__':
     app.run(debug=True)
