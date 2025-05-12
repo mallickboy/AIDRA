@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>MedGuide AI</title>
+  <link rel="icon" href="static/favicon.ico" type="image/x-icon">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+  <style>
+    body { background: #f8f9fa; }
+    .card { border-radius: 1rem; box-shadow: 0 0 20px rgba(0,0,0,0.1); }
+    .answer-box { white-space: pre-wrap; }
+  </style>
+</head>
+<body>
+<div class="container py-5">
+  <h1 class="mb-4 text-center">🩺 Ask Medical Questions</h1>
+
+  <!-- Question Form -->
+  <form id="question-form" class="mb-4">
+    <div class="input-group mb-3">
+      <input type="text" id="question-input" name="question" class="form-control" placeholder="Enter your question..." required>
+      <button id="submit-btn" class="btn btn-primary" type="submit">Ask</button>
+    </div>
+  </form>
+
+  <!-- Clear Button -->
+  <form method="GET" action="/clear" class="mb-4">
+    <button class="btn btn-danger">🧹 New Session</button>
+  </form>
+
+  <!-- Q&A Container -->
+  <div id="history-container"></div>
+</div>
+
+<script>
+  const form = document.getElementById('question-form');
+  const input = document.getElementById('question-input');
+  const button = document.getElementById('submit-btn');
+  const container = document.getElementById('history-container');
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const question = input.value.trim();
+    if (!question) return;
+
+    // Disable input and button while processing
+    input.disabled = true;
+    button.disabled = true;
+    const originalText = button.textContent;
+    const originalColor = button.style.backgroundColor; // Store the original button color
+    button.textContent = 'Processing...';
+    
+    // Change button background to light greenish-yellow
+    button.style.backgroundColor = '#08a31f';  // Light greenish-yellow
+    button.style.borderColor = '#c3e6cb'; // Optional: Lighter border
+
+    const formData = new FormData();
+    formData.append('question', question);
+
+    try {
+      const response = await fetch("/", {
+        method: "POST",
+        body: formData
+      });
+
+      const data = await response.json();
+
+      if (data.html) {
+        const wrapper = document.createElement('div');
+        wrapper.innerHTML = data.html;
+        container.prepend(wrapper.firstElementChild);  // Add new QnA on top
+      }
+    } catch (error) {
+      console.error("Error submitting question:", error);
+    } finally {
+      // Re-enable input & button, reset button text and color
+      input.value = '';
+      input.disabled = false;
+      button.disabled = false;
+      button.textContent = originalText;
+      button.style.backgroundColor = originalColor; // Reset original color
+      button.style.borderColor = ''; // Reset original border color
+    }
+  });
+</script>
+
+</body>
+</html>
