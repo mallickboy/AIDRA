@@ -11,6 +11,7 @@ import os
 from pinecone import Pinecone
 import markdown
 from flask_cors import CORS
+import traceback
 
 
 index_name = "maindb"
@@ -73,28 +74,47 @@ qa_chain = RetrievalQA.from_chain_type(
 
 @app.route('/', methods=['GET', 'POST']) 
 def index():
-    if "history" not in session:
-        session["history"] = []
+    try:
 
-    if request.method == 'POST':
-        question = request.form['question']
-        temp = qa_chain.invoke(question)  
+        if "history" not in session:
+            session["history"] = []
 
-        answer = temp['result']
-        answer = markdown.markdown(str(answer)) if answer is not None else answer
-        
-        clean_context = [doc.page_content for doc in temp['source_documents']]
-        session["history"].append({
-            "question": question,
-            "answer": answer,
-            "context": clean_context
-        }) 
-        session.modified = True  
-        return jsonify({
+        if request.method == 'POST':
+            question = request.form.get('question', '').strip()
+            if not question:
+                return jsonify({"error": "No question provided"}), 400
+
+            temp = qa_chain.invoke(question)  
+
+            answer = temp['result']
+            answer = markdown.markdown(str(answer)) if answer is not None else answer
+
+            clean_context = [
+            doc.page_content[:600]  # Truncate each document to 800 characters
+            for doc in temp['source_documents'][-2:]  # Limit to the last 3 documents
+        ]
+
+            # answer = "Hi this is answer"
+            # clean_context = "This is context"
+
+            session["history"].append({
+                "question": question,
+                "answer": answer,
+                "context": clean_context
+            })
+            session["history"] = session["history"][-2:] # overflow gives error
+            session.modified = True  
+            res= jsonify({
             'html': render_template('entry.html', question=question, answer=answer)
         }), 200
+            # print(f"\n\nLOG: response send :{res}")
+            return res
 
-    return render_template('index.html'), 200
+        return render_template('index.html'), 200
+    except Exception as e:
+        traceback.print_exc()
+        return jsonify({"error": str(e)}), 500
+
 
 
 

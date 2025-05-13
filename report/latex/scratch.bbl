@@ -1,0 +1,74 @@
+\newpage
+\begin{thebibliography}{9}
+
+\bibitem{worldbank_who}
+World Bank and World Health Organization (2017) \textit{Half the world lacks access to essential health services, 100 million still pushed into extreme poverty because of health expenses}. Available at: \url{https://www.who.int/news/item/13-12-2017} (Accessed: 13 May 2025).
+
+\bibitem{phfi}
+Public Health Foundation of India (2018) \textit{Catastrophic health expenditure in India: Who is at risk?} Available at: \url{https://www.phfi.org} (Accessed: 13 May 2025).
+
+\bibitem{who_patientsafety}
+World Health Organization (2019) \textit{Patient safety fact file}. Available at: \url{https://www.who.int} (Accessed: 13 May 2025).
+
+\bibitem{hallucination_survey}
+Ji, Z., Lee, N., Frieske, R., Yu, T., Su, D., Xu, Y. and Ishii, E. (2023) \textit{Survey of hallucination in natural language generation}. \textit{arXiv preprint}, arXiv:2302.03629. Available at: \url{https://arxiv.org/abs/2302.03629} (Accessed: 13 May 2025).
+
+\bibitem{digital_health_platforms}
+Ada Health, Babylon Health and HealthTap (no date) \textit{Digital healthcare platforms}. Available at: \url{https://ada.com}, \url{https://www.babylonhealth.com}, \url{https://www.healthtap.com} (Accessed: 13 May 2025).
+
+\bibitem{chatgpt}
+OpenAI (no date) \textit{ChatGPT: Optimizing language models for dialogue}. Available at: \url{https://openai.com/chatgpt} (Accessed: 13 May 2025).
+
+\bibitem{langchain}
+LangChain (no date) \textit{LangChain documentation}. Available at: \url{https://docs.langchain.com} (Accessed: 13 May 2025).
+
+\bibitem{sentence_transformers}
+Reimers, N. and Gurevych, I. (no date) \textit{HuggingFace sentence transformers}. Available at: \url{https://www.sbert.net} (Accessed: 13 May 2025).
+
+\bibitem{pinecone}
+Pinecone (no date) \textit{Pinecone documentation}. Available at: \url{https://docs.pinecone.io} (Accessed: 13 May 2025).
+
+\bibitem{homl}
+Géron, A. (2023) \textit{Hands-on machine learning with Scikit-Learn, Keras, and TensorFlow: Concepts, tools, and techniques to build intelligent systems}. 3rd edn. Sebastopol, CA: O’Reilly Media.
+
+\bibitem{python_dotenv}
+Python-dotenv (no date) \textit{Reads key-value pairs from a .env file and sets them as environment variables}. Available at: \url{https://pypi.org/project/python-dotenv/} (Accessed: 13 May 2025).
+
+\bibitem{prompt_injection}
+OpenAI (2023) \textit{Prompt Injection Attacks and Defenses}. Available at: \url{https://platform.openai.com/docs/guides/prompt-engineering/prompt-injection} (Accessed: 13 May 2025).
+
+\bibitem{azure_docs}
+Microsoft Azure (no date) \textit{Deploy Python apps to Azure Virtual Machines}. Available at: \url{https://learn.microsoft.com/en-us/azure/developer/python/} (Accessed: 13 May 2025).
+
+\bibitem{gunicorn_docs}
+Gunicorn (no date) \textit{Green Unicorn: Production WSGI server for Python}. Available at: \url{https://gunicorn.org/} (Accessed: 13 May 2025).
+
+\bibitem{mozilla_ssl}
+Mozilla (no date) \textit{Server Side TLS: SSL Configuration Generator}. Available at: \url{https://ssl-config.mozilla.org/} (Accessed: 13 May 2025).
+
+\bibitem{google_translate}
+Google (no date) \textit{Google Translate API}. Available at: \url{https://translate.google.com} (Accessed: 13 May 2025).
+
+\bibitem{marianmt}
+HuggingFace (no date) \textit{MarianMT}. Available at: \url{https://huggingface.co/Helsinki-NLP/opus-mt} (Accessed: 13 May 2025).
+
+\bibitem{speechrecognition}
+SpeechRecognition (no date) \textit{SpeechRecognition Python Package}. Available at: \url{https://pypi.org/project/SpeechRecognition/} (Accessed: 13 May 2025).
+
+\bibitem{google_tts}
+Google (no date) \textit{Google Cloud Text-to-Speech}. Available at: \url{https://cloud.google.com/text-to-speech} (Accessed: 13 May 2025).
+
+\bibitem{reactjs}
+React (no date) \textit{ReactJS Framework}. Available at: \url{https://reactjs.org} (Accessed: 13 May 2025).
+
+\bibitem{mongodb}
+MongoDB (no date) \textit{MongoDB}. Available at: \url{https://www.mongodb.com} (Accessed: 13 May 2025).
+
+\bibitem{who_guidelines}
+World Health Organization (no date) \textit{WHO Guidelines}. Available at: \url{https://www.who.int} (Accessed: 13 May 2025).
+
+\bibitem{cdc_publications}
+Centers for Disease Control and Prevention (no date) \textit{CDC Publications}. Available at: \url{https://www.cdc.gov} (Accessed: 13 May 2025).
+
+
+\end{thebibliography}

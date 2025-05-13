@@ -12,4 +12,6 @@ pinecone
 python-dotenv
 Flask-Session
 markdown
+flask-cors
+
 

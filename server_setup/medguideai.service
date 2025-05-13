@@ -1,0 +1,15 @@
+[Unit]
+Description=Gunicorn instance for MedGuide AI
+After=network.target
+
+[Service]
+User=mallickboy
+Group=www-data
+WorkingDirectory=/home/mallickboy/medguideai/backend
+ExecStart=/home/mallickboy/medguideai/backend/medguideai/bin/gunicorn -w 1 -b 0.0.0.0:9000 app:app
+
+Restart=always
+Environment="PATH=/home/mallickboy/medguideai/backend/medguideai/bin"
+
+[Install]
+WantedBy=multi-user.target
