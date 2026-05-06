@@ -2,10 +2,8 @@
 
 ## Screenshots
 
-### Image 1
+### Demo
 ![Image 1](https://github.com/user-attachments/assets/7ac65199-394a-4464-b5ee-236602893694)
-
-### Image 2
 ![Image 2](https://github.com/user-attachments/assets/6044646f-8eb2-4d44-9a5e-3d987cb19302)
 
 #### Setup 
